@@ -47,7 +47,7 @@ export function Footer() {
         <ul>
           <li className="flex items-center gap-2">
             <FiPhone size={16} color="#34c274" />
-            (11) 9876-5432
+            (41) 99820-6785
           </li>
           <li className="flex items-center gap-2">
             <FaRegEnvelope size={16} color="#34c274" />

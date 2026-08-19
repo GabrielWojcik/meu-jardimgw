@@ -6,6 +6,7 @@ import { CiCircleCheck } from "react-icons/ci";
 import { FiShoppingBag } from "react-icons/fi";
 import { LuLeaf } from "react-icons/lu";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -52,9 +53,11 @@ export default function Home() {
           </div>
 
           <div className="text-center mt-12">
+            <Link href="/catalogo">
             <button className="text-[#3C6F4D] border border-[#3C6F4D] py-2 px-4 rounded-md cursor-pointer hover:bg-[#3C6F4D] hover:text-white transition-colors duration-200">
               Ver todas categorias
             </button>
+            </Link>
           </div>
         </div>
       </section>
