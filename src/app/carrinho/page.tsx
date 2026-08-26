@@ -87,8 +87,8 @@ export default function CartPage() {
                   <span className="font-medium text-gray-800">R$ 15,00</span>
                 </div>
               </div>
-              <div className="flex gap-2">
-                <div>
+              <div className="flex items-end gap-2">
+                <div className="flex-1">
                   <label
                     htmlFor=""
                     className="text-xs font-bold text-gray-400 uppercase mb-2 block"
@@ -105,7 +105,7 @@ export default function CartPage() {
                     }}
                   />
                 </div>
-                <button className="px-4 py-2 text-[#2D5A27] font-bold text-sm bg-[#E8F5E9] rounded-2xl hover:bg-[#d0e9d3] transition-colors">
+                <button className="shrink-0 px-5 py-[9px] text-[#2D5A27] font-bold text-sm bg-[#E8F5E9] rounded-full hover:bg-[#d0e9d3] transition-colors">
                   Ok
                 </button>
               </div>

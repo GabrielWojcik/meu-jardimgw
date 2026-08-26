@@ -56,7 +56,7 @@ export function NavBarMobile() {
               <Link href="/">
                 <li>Início</li>
               </Link>
-              <Link href="/plantas">
+              <Link href="/catalogo">
                 <li>Plantas</li>
               </Link>
               <Link href="/vasos">

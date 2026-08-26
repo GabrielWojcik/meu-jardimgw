@@ -29,7 +29,7 @@ export function NavBar() {
       </Link>
       <div>
         <ul className="flex gap-4">
-          <Link href="/plantas">
+          <Link href="/catalogo">
             <li className="cursor-pointer hover:text-lime-600 transition-colors duration-200">
               Plantas
             </li>
