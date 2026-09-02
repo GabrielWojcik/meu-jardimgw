@@ -1,7 +1,7 @@
 import "server-only";
 import { ApiError } from "@/lib/api";
 
-const API_URL = process.env.API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const ADMIN_API_KEY = process.env.ADMIN_API_KEY;
 
 async function request<T>(
@@ -9,7 +9,7 @@ async function request<T>(
   init: RequestInit
 ): Promise<T> {
   if (!API_URL) {
-    throw new Error("API_URL não está definida");
+    throw new Error("NEXT_PUBLIC_API_URL não está definida");
   }
   if (!ADMIN_API_KEY) {
     throw new Error("ADMIN_API_KEY não está definida");

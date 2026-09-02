@@ -1,7 +1,7 @@
-const API_URL = process.env.API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 if (!API_URL) {
-  throw new Error("API_URL não está definida");
+  throw new Error("NEXT_PUBLIC_API_URL não está definida");
 }
 
 export class ApiError extends Error {
