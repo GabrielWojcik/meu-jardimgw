@@ -31,12 +31,14 @@ export default function CartPage() {
                 className="bg-white p-4 md:p-6 rounded-3xl shadow-sm flex flex-col md:flex-row items-center gap-6 group hover:shadow-md transition-shadow"
               >
                 <div className="w-24 h-24 md:w-32 md:h-32 bg-gray-100 rounded-2xl overflow-hidden flex-shrink-0 relative">
-                  <Image
-                    src={value.image}
-                    alt=""
-                    fill
-                    className="object-cover"
-                  />
+                  {value.image && (
+                    <Image
+                      src={value.image}
+                      alt=""
+                      fill
+                      className="object-cover"
+                    />
+                  )}
                 </div>
                 <div className="flex-grow text-center md:text-left">
                   <span className="text-xs uppercase tracking-wider text-gray-400 font-semibold">

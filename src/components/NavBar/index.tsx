@@ -49,6 +49,13 @@ export function NavBar() {
               Contato
             </li>
           </Link>
+          {session?.user?.isAdmin && (
+            <Link href="/admin/produtos">
+              <li className="cursor-pointer hover:text-lime-600 transition-colors duration-200">
+                Admin
+              </li>
+            </Link>
+          )}
         </ul>
       </div>
       <div className="flex items-center gap-4">

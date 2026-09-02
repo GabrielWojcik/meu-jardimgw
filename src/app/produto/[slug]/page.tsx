@@ -1,20 +1,31 @@
-import { cardMocks } from "@/mocks/cards";
-import { potMocks } from "@/mocks/pots";
+"use client";
+
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useProduct } from "@/hooks/useProducts";
 import { ProductPageClient } from "./ProductPageClient";
-import { notFound } from "next/navigation";
 
-interface ProductPageProps {
-  params: Promise<{ slug: string }>;
-}
+export default function ProductPage() {
+  const { slug } = useParams<{ slug: string }>();
+  const { data: product, isLoading, isError } = useProduct(slug);
 
-export default async function ProductPage({ params }: ProductPageProps) {
-  const { slug } = await params;
-  const id = parseInt(slug.split("-").pop() || "0");
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        Carregando...
+      </div>
+    );
+  }
 
-  const product = [...cardMocks, ...potMocks].find((p) => p.id === id);
-
-  if (!product) {
-    notFound();
+  if (isError || !product) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen gap-4 text-center px-4">
+        <p className="text-gray-600">Produto não encontrado.</p>
+        <Link href="/catalogo" className="text-green-700 underline">
+          Voltar ao catálogo
+        </Link>
+      </div>
+    );
   }
 
   return <ProductPageClient product={product} />;

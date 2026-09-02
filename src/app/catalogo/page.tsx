@@ -1,9 +1,9 @@
 "use client";
 import { Suspense, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { cardMocks } from "@/mocks/cards";
 import { useFilterStore } from "@/store/filterStore";
 import { ProductCard } from "@/components/ProductCard";
+import { useProducts } from "@/hooks/useProducts";
 
 const categories = ["Suculentas", "Orquídeas", "Samambaias"];
 
@@ -12,6 +12,10 @@ function CatalogoContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { category, setCategory } = useFilterStore();
+  const { data, isLoading, isError } = useProducts({
+    category: category ?? undefined,
+  });
+  const products = data?.data ?? [];
 
   useEffect(() => {
     const categoryFromUrl = searchParams.get("category");
@@ -29,10 +33,6 @@ function CatalogoContent() {
     }
     router.push(`?${params.toString()}`);
   };
-
-  const filteredProducts = category
-    ? cardMocks.filter((product) => product.category === category)
-    : cardMocks;
 
   return (
     <div className="bg-gray-50 min-h-screen font-sans">
@@ -77,17 +77,25 @@ function CatalogoContent() {
         <div className="flex justify-between items-center mb-8 p-4 bg-white rounded-lg shadow-sm">
           <div className="text-gray-600">
             Mostrando{" "}
-            <span className="font-semibold">{filteredProducts.length}</span>{" "}
+            <span className="font-semibold">{products.length}</span>{" "}
             produtos
           </div>
         </div>
 
         {/* Grade de Produtos */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {isLoading && <p className="text-gray-500">Carregando produtos...</p>}
+        {isError && (
+          <p className="text-red-600">
+            Não foi possível carregar os produtos. Tente novamente.
+          </p>
+        )}
+        {!isLoading && !isError && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
       </main>
       {/* Seção de Vantagens */}
       <section className="bg-lime-50/80 py-16">

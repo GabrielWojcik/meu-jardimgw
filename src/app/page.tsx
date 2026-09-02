@@ -1,11 +1,9 @@
 import { Banner } from "@/components/Banner";
-import { ProductCard } from "@/components/ProductCard";
-import { cardMocks } from "@/mocks/cards";
-import { categoriesMock } from "@/mocks/categories";
+import { CategoriesSection } from "@/components/CategoriesSection";
+import { FeaturedProducts } from "@/components/FeaturedProducts";
 import { CiCircleCheck } from "react-icons/ci";
 import { FiShoppingBag } from "react-icons/fi";
 import { LuLeaf } from "react-icons/lu";
-import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
@@ -26,31 +24,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {categoriesMock.map((category) => (
-              <a key={category.id} href={category.href} className="block group">
-                <div className="bg-white rounded-2xl shadow-md group-hover:shadow-xl transition-shadow duration-300 ease-in-out overflow-hidden h-full">
-                  <div className="overflow-hidden">
-                    <Image
-                      src={category.imagem}
-                      alt={category.nome}
-                      width={600}
-                      height={400}
-                      className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300 ease-in-out"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                      {category.nome}
-                    </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                      {category.descricao}
-                    </p>
-                  </div>
-                </div>
-              </a>
-            ))}
-          </div>
+          <CategoriesSection />
 
           <div className="text-center mt-12">
             <Link href="/catalogo">
@@ -74,11 +48,7 @@ export default function Home() {
               populares
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto">
-            {cardMocks.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          <FeaturedProducts />
           <div className="text-center mt-12">
             <button className="text-[#3C6F4D] border border-[#3C6F4D] py-2 px-4 rounded-md cursor-pointer hover:bg-[#3C6F4D] hover:text-white transition-colors duration-200">
               Ver todos produtos

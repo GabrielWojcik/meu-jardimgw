@@ -3,41 +3,28 @@
 import { Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import type { StaticImageData } from "next/image";
+import type { Product } from "@/types/product";
 
-export interface ProductCardProps {
-  id: number;
-  slug: string;
-  image: StaticImageData;
-  title: string;
-  description: string;
-  price: number;
-  light: string;
-  water: string;
-  size: string;
-  stock: number;
-  href: string;
-  category: string;
-}
-
-export function ProductCard({ product }: { product: ProductCardProps }) {
+export function ProductCard({ product }: { product: Product }) {
   return (
-    <Link href={`/produto/${product.slug}-${product.id}`}>
+    <Link href={`/produto/${product.slug}`}>
       <div className="bg-white rounded-lg shadow-md overflow-hidden group transition-transform duration-300 hover:shadow-xl hover:-translate-y-1">
-        <div className="relative h-56">
-          <Image
-            src={product.image}
-            alt={product.title}
-            fill
-            className="object-cover"
-          />
+        <div className="relative h-56 bg-gray-100">
+          {product.image && (
+            <Image
+              src={product.image}
+              alt={product.title}
+              fill
+              className="object-cover"
+            />
+          )}
           <button className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition">
             <Heart size={24} />
           </button>
         </div>
         <div className="p-4">
           <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-            {product.category}
+            {product.category.name}
           </span>
           <h3 className="text-lg font-semibold text-gray-800 mt-2 mb-1 truncate">
             {product.title}

@@ -14,9 +14,21 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  if (pathname.startsWith("/admin")) {
+    if (!isAuthenticated) {
+      const loginUrl = new URL("/api/auth/signin", req.url);
+      loginUrl.searchParams.set("callbackUrl", req.url);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    if (!token?.isAdmin) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/perfil/:path*"],
+  matcher: ["/perfil/:path*", "/admin/:path*"],
 };

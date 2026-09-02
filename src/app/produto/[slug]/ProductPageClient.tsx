@@ -10,10 +10,10 @@ import { CareAttribute } from "@/components/modules/product/CareAttribute";
 import { QuantitySelector } from "@/components/modules/product/QuantitySelector";
 import { useCartStore } from "@/store/cartStore";
 import { useCallback, useState } from "react";
-import type { ProductCardProps } from "@/components/ProductCard";
+import type { Product } from "@/types/product";
 
 interface ProductPageClientProps {
-  product: ProductCardProps;
+  product: Product;
 }
 
 export function ProductPageClient({ product }: ProductPageClientProps) {
@@ -23,8 +23,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
 
   // Calcula quantos items deste produto já estão no carrinho
   const currentCartQuantity =
-    items.find((item) => item.id === `${product.slug}-${product.id}`)
-      ?.quantity || 0;
+    items.find((item) => item.id === product.id)?.quantity || 0;
 
   // Calcula o máximo que pode ser adicionado
   const maxAvailable = product.stock - currentCartQuantity;
@@ -39,10 +38,10 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
 
     addItem(
       {
-        id: `${product.slug}-${product.id}`,
+        id: product.id,
         name: product.title,
         price: product.price,
-        image: product.image.src,
+        image: product.image ?? "",
       },
       quantityToAdd,
     );
@@ -53,11 +52,17 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
   return (
     <div className="flex flex-col h-full py-4 md:pr-4 md:flex-row gap-2">
       <div className="flex items-center justify-center md:pr-4 md:w-1/2">
-        <Image
-          src={product.image}
-          alt={product.title}
-          className="h-auto w-full rounded-2xl md:max-h-[600px] object-contain"
-        />
+        {product.image ? (
+          <Image
+            src={product.image}
+            alt={product.title}
+            width={600}
+            height={600}
+            className="h-auto w-full rounded-2xl md:max-h-[600px] object-contain"
+          />
+        ) : (
+          <div className="h-auto w-full aspect-square rounded-2xl bg-gray-100 md:max-h-[600px]" />
+        )}
       </div>
 
       <div className="flex flex-col gap-2 px-4 md:w-1/2 justify-around">
@@ -69,19 +74,19 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
           <div className="grid grid-cols-3 gap-3">
             <CareAttribute
               title="LUZ"
-              subTitle={product.light}
+              subTitle={product.light ?? "—"}
               icon={GoSun}
               iconColor="#F59E0B"
             />
             <CareAttribute
               title="ÁGUA"
-              subTitle={product.water}
+              subTitle={product.water ?? "—"}
               icon={LuDroplets}
               iconColor="#3B82F6"
             />
             <CareAttribute
               title="TAM."
-              subTitle={product.size}
+              subTitle={product.size ?? "—"}
               icon={SlSizeFullscreen}
               iconColor="#10B981"
             />
