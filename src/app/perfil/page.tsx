@@ -4,10 +4,7 @@ import { Tabs } from "antd";
 import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import { CiLogout } from "react-icons/ci";
-import { FiBox } from "react-icons/fi";
 import { GoGear } from "react-icons/go";
-import { IoLocationOutline } from "react-icons/io5";
-import { MdFavoriteBorder, MdOutlinePayment } from "react-icons/md";
 
 import { Favorites } from "./components/favorites";
 import { Requested } from "./components/requested";
@@ -77,28 +74,6 @@ export default function Perfil() {
             <GoGear color="#23432F" />
             <span>Editar Perfil</span>
           </button>
-        </div>
-      </div>
-      <div className="flex justify-between">
-        <div className="p-4 border border-[#CDE4D6] rounded-md flex flex-col items-center gap-2 w-[300px]">
-          <FiBox color="#3D7150" size={32} />
-          <span className="font-bold text-2xl">12</span>
-          <span>Pedidos</span>
-        </div>
-        <div className="p-4 border border-[#CDE4D6] rounded-md flex flex-col items-center gap-2 w-[300px]">
-          <MdFavoriteBorder color="#3D7150" size={32} />
-          <span className="font-bold text-2xl">12</span>
-          <span>Favoritos</span>
-        </div>
-        <div className="p-4 border border-[#CDE4D6] rounded-md flex flex-col items-center gap-2 w-[300px]">
-          <MdOutlinePayment color="#3D7150" size={32} />
-          <span className="font-bold text-2xl">R$ 12,00</span>
-          <span>Total Gastos</span>
-        </div>
-        <div className="p-4 border border-[#CDE4D6] rounded-md flex flex-col items-center gap-2 w-[300px]">
-          <IoLocationOutline color="#3D7150" size={32} />
-          <span className="font-bold text-2xl">1</span>
-          <span>Endereços</span>
         </div>
       </div>
       <div>

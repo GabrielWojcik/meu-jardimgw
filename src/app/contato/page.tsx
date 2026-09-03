@@ -7,6 +7,7 @@ import {
   LuClock,
   LuMapPin,
 } from "react-icons/lu";
+import { WHATSAPP_NUMBER } from "@/lib/constants";
 
 const channels = [
   {
@@ -14,7 +15,7 @@ const channels = [
     icon: LuMessageCircle,
     title: "WhatsApp",
     description: "(41) 99820-6785",
-    href: "https://wa.me/5541998206785",
+    href: `https://wa.me/${WHATSAPP_NUMBER}`,
   },
   {
     id: 2,

@@ -2,13 +2,78 @@
 import { QuantitySelector } from "@/components/modules/product/QuantitySelector";
 import { FaRegTrashAlt } from "react-icons/fa";
 import Image from "next/image";
-import { Input } from "antd";
-import { IoLocationOutline } from "react-icons/io5";
+import { Button, Form, Input, message } from "antd";
 import { useCartStore } from "@/store/cartStore";
+import { useSession, signIn } from "next-auth/react";
+import { useCreateOrder } from "@/hooks/useOrders";
+import { WHATSAPP_NUMBER } from "@/lib/constants";
+import type { CreateOrderInput } from "@/types/order";
+
+type DeliveryFormValues = Omit<CreateOrderInput, "items">;
+
+function buildWhatsAppMessage(
+  items: { name: string; price: number; quantity: number }[],
+  total: number,
+  values: DeliveryFormValues
+) {
+  const lines = items.map(
+    (item) => `- ${item.quantity}x ${item.name} — R$ ${(item.price * item.quantity).toFixed(2)}`
+  );
+
+  const address = [
+    `${values.street}, ${values.number}${values.complement ? `, ${values.complement}` : ""}`,
+    `${values.neighborhood} - ${values.city}${values.zipCode ? `, CEP ${values.zipCode}` : ""}`,
+  ].join("\n");
+
+  const parts = [
+    "Olá! Gostaria de confirmar meu pedido:",
+    "",
+    ...lines,
+    "",
+    `Total: R$ ${total.toFixed(2)}`,
+    "",
+    "Entrega:",
+    address,
+  ];
+
+  if (values.notes) {
+    parts.push("", `Observações: ${values.notes}`);
+  }
+
+  return parts.join("\n");
+}
 
 export default function CartPage() {
-  const { items, updateQuantity, removeItem, totalItems, totalPrice } =
+  const { items, updateQuantity, removeItem, totalItems, totalPrice, clearCart } =
     useCartStore();
+  const { data: session } = useSession();
+  const createOrder = useCreateOrder();
+  const [form] = Form.useForm<DeliveryFormValues>();
+
+  const handleFinish = async (values: DeliveryFormValues) => {
+    if (!session?.user) {
+      signIn("google", { callbackUrl: "/carrinho" });
+      return;
+    }
+
+    try {
+      await createOrder.mutateAsync({
+        ...values,
+        items: items.map((item) => ({
+          productId: item.id,
+          quantity: item.quantity,
+        })),
+      });
+
+      const text = buildWhatsAppMessage(items, totalPrice(), values);
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`, "_blank");
+      clearCart();
+      form.resetFields();
+      message.success("Pedido registrado! Continue a conversa no WhatsApp.");
+    } catch {
+      message.error("Não foi possível registrar o pedido. Tente novamente.");
+    }
+  };
 
   return (
     <main className="flex-grow max-w-7xl mx-auto w-full px-4 py-8 md:py-12">
@@ -41,9 +106,6 @@ export default function CartPage() {
                   )}
                 </div>
                 <div className="flex-grow text-center md:text-left">
-                  <span className="text-xs uppercase tracking-wider text-gray-400 font-semibold">
-                    Suculentas
-                  </span>
                   <h3 className="text-lg font-bold text-gray-800 mt-1">
                     {value.name}
                   </h3>
@@ -84,33 +146,88 @@ export default function CartPage() {
                     R$ {totalPrice().toFixed(2).replace(".", ",")}
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <p>Entrega</p>
-                  <span className="font-medium text-gray-800">R$ 15,00</span>
-                </div>
               </div>
-              <div className="flex items-end gap-2">
-                <div className="flex-1">
-                  <label
-                    htmlFor=""
-                    className="text-xs font-bold text-gray-400 uppercase mb-2 block"
+
+              <p className="text-sm font-bold text-gray-500 uppercase mb-3">
+                Dados de entrega
+              </p>
+              <Form
+                layout="vertical"
+                form={form}
+                onFinish={handleFinish}
+                initialValues={{ customerName: session?.user?.name ?? "" }}
+                size="small"
+              >
+                <Form.Item
+                  name="customerName"
+                  label="Nome"
+                  rules={[{ required: true, message: "Informe seu nome" }]}
+                >
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  name="customerPhone"
+                  label="Telefone"
+                  rules={[{ required: true, message: "Informe seu telefone" }]}
+                >
+                  <Input placeholder="(41) 99999-9999" />
+                </Form.Item>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="col-span-2">
+                    <Form.Item
+                      name="street"
+                      label="Rua"
+                      rules={[{ required: true, message: "Informe a rua" }]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </div>
+                  <Form.Item
+                    name="number"
+                    label="Número"
+                    rules={[{ required: true, message: "Nº" }]}
                   >
-                    Calcular Frete
-                  </label>
-                  <Input
-                    placeholder="00000-000"
-                    prefix={<IoLocationOutline color="#9ca3af" size={18} />}
-                    style={{
-                      borderRadius: "9999px",
-                      padding: "8px 16px",
-                      borderColor: "#e5e7eb",
-                    }}
-                  />
+                    <Input />
+                  </Form.Item>
                 </div>
-                <button className="shrink-0 px-5 py-[9px] text-[#2D5A27] font-bold text-sm bg-[#E8F5E9] rounded-full hover:bg-[#d0e9d3] transition-colors">
-                  Ok
-                </button>
-              </div>
+                <Form.Item name="complement" label="Complemento (opcional)">
+                  <Input />
+                </Form.Item>
+                <div className="grid grid-cols-2 gap-2">
+                  <Form.Item
+                    name="neighborhood"
+                    label="Bairro"
+                    rules={[{ required: true, message: "Informe o bairro" }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name="city"
+                    label="Cidade"
+                    rules={[{ required: true, message: "Informe a cidade" }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </div>
+                <Form.Item name="zipCode" label="CEP (opcional)">
+                  <Input placeholder="00000-000" />
+                </Form.Item>
+                <Form.Item name="notes" label="Observações (opcional)">
+                  <Input.TextArea rows={2} />
+                </Form.Item>
+
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  block
+                  loading={createOrder.isPending}
+                  className="!bg-[#2D5A27]"
+                >
+                  {session?.user
+                    ? "Finalizar pedido via WhatsApp"
+                    : "Fazer login para finalizar"}
+                </Button>
+              </Form>
             </div>
           </div>
         </div>
