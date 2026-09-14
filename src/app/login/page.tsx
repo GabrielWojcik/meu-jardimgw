@@ -1,15 +1,12 @@
-import { LuLeaf } from "react-icons/lu";
 import { LoginBtn } from "@/components/LoginBtn";
+import { Logo } from "@/components/NavBar/Logo";
 
 export default async function LoginPage() {
   return (
     <div className="bg-[#E4F1DC] flex flex-col justify-center items-center h-screen">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col items-center gap-2">
-          <div className="w-20 p-4 rounded-full bg-[#2F5E3C] ">
-            <LuLeaf size={48} color="#E4F1DC" />
-          </div>
-          <h1 className="text-2xl text-[#2F5E3C]">Meu Jardim</h1>
+          <Logo />
           <p className="text-center md:text-start">
             Entre na sua conta para continuar suas compras
           </p>

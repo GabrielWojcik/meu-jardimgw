@@ -1,8 +1,10 @@
 "use client";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
+import { Dropdown } from "antd";
+import type { MenuProps } from "antd";
 import { FaRegUser } from "react-icons/fa";
-import { FiShoppingBag } from "react-icons/fi";
+import { FiLogOut, FiShoppingBag } from "react-icons/fi";
 import { IoIosSearch } from "react-icons/io";
 
 import Link from "next/link";
@@ -18,6 +20,24 @@ export function NavBar() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const userMenuItems: MenuProps["items"] = [
+    {
+      key: "perfil",
+      icon: <FaRegUser size={14} />,
+      label: <Link href="/perfil">Perfil</Link>,
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "sair",
+      icon: <FiLogOut size={14} />,
+      label: "Sair",
+      danger: true,
+      onClick: () => signOut({ callbackUrl: "/" }),
+    },
+  ];
 
   return (
     <div className="hidden md:flex text-green-800 items-center justify-between mx-8 py-4">
@@ -60,15 +80,19 @@ export function NavBar() {
         <div className="border p-2 border-lime-200 relative rounded-sm">
           <div className="m-1 cursor-pointer">
             {session?.user?.image ? (
-              <Link href="/perfil">
+              <Dropdown
+                menu={{ items: userMenuItems }}
+                trigger={["click"]}
+                placement="bottomRight"
+              >
                 <Image
                   src={session.user.image}
                   alt={session.user.name || "User"}
                   width={20}
                   height={20}
-                  className="rounded-full"
+                  className="rounded-full cursor-pointer"
                 />
-              </Link>
+              </Dropdown>
             ) : (
               <Link href="/login">
                 <FaRegUser color="#3F6212" size={20} />

@@ -62,8 +62,12 @@ export default function NewProductPage() {
           <Input />
         </Form.Item>
 
-        <Form.Item name="slug" label="Slug (opcional, gerado do título se vazio)">
-          <Input />
+        <Form.Item
+          name="slug"
+          label="Slug (opcional, gerado do título se vazio)"
+          extra="É assim que a URL do produto vai ficar, ex: /produto/suculenta-jade"
+        >
+          <Input addonBefore="/produto/" placeholder="suculenta-jade" />
         </Form.Item>
 
         <Form.Item

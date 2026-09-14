@@ -112,8 +112,12 @@ export default function EditProductPage() {
           <Input />
         </Form.Item>
 
-        <Form.Item name="slug" label="Slug">
-          <Input />
+        <Form.Item
+          name="slug"
+          label="Slug"
+          extra="É assim que a URL do produto vai ficar, ex: /produto/suculenta-jade"
+        >
+          <Input addonBefore="/produto/" />
         </Form.Item>
 
         <Form.Item

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FaRegEnvelope } from "react-icons/fa6";
+import { FaInstagram, FaRegEnvelope } from "react-icons/fa6";
 import { FiPhone } from "react-icons/fi";
 
 export function Footer() {
@@ -51,7 +51,17 @@ export function Footer() {
           </li>
           <li className="flex items-center gap-2">
             <FaRegEnvelope size={16} color="#34c274" />
-            contato@meujardim.com
+            mmeujardim@gmail.com
+          </li>
+          <li className="flex items-center gap-2">
+            <FaInstagram size={16} color="#34c274" />
+            <Link
+              href="https://www.instagram.com/meujardimgw/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              @meujardimgw
+            </Link>
           </li>
         </ul>
       </div>
