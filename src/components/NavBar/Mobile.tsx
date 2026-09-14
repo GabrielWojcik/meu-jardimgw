@@ -6,6 +6,7 @@ import { useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { Logo } from "./Logo";
 
 export function NavBarMobile() {
   const { data: session } = useSession();
@@ -13,11 +14,7 @@ export function NavBarMobile() {
 
   return (
     <div className="flex items-center justify-between mx-4 mb-4 py-4">
-      <Link href="/">
-        <div>
-          <p className="text-3xl text-[#2f5e3c]">Meu Jardim</p>
-        </div>
-      </Link>
+      <Logo compact />
       <div className="flex gap-3 items-center">
         <div className="border p-2 border-lime-200 relative rounded-sm">
           <div className="m-1 cursor-pointer">

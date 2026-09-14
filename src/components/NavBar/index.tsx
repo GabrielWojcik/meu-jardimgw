@@ -8,6 +8,7 @@ import { IoIosSearch } from "react-icons/io";
 import Link from "next/link";
 import { useCartStore } from "@/store/cartStore";
 import { useEffect, useState } from "react";
+import { Logo } from "./Logo";
 
 export function NavBar() {
   const { data: session } = useSession();
@@ -20,13 +21,7 @@ export function NavBar() {
 
   return (
     <div className="hidden md:flex text-green-800 items-center justify-between mx-8 py-4">
-      <Link href="/">
-        <div>
-          <p className="text-xl font-serif font-bold text-emerald-800 italic">
-            Meu Jardim
-          </p>
-        </div>
-      </Link>
+      <Logo />
       <div>
         <ul className="flex gap-4">
           <Link href="/catalogo">

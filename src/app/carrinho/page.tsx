@@ -156,21 +156,20 @@ export default function CartPage() {
                 form={form}
                 onFinish={handleFinish}
                 initialValues={{ customerName: session?.user?.name ?? "" }}
-                size="small"
               >
                 <Form.Item
                   name="customerName"
                   label="Nome"
                   rules={[{ required: true, message: "Informe seu nome" }]}
                 >
-                  <Input />
+                  <Input className="!rounded-xl" />
                 </Form.Item>
                 <Form.Item
                   name="customerPhone"
                   label="Telefone"
                   rules={[{ required: true, message: "Informe seu telefone" }]}
                 >
-                  <Input placeholder="(41) 99999-9999" />
+                  <Input className="!rounded-xl" placeholder="(41) 99999-9999" />
                 </Form.Item>
                 <div className="grid grid-cols-3 gap-2">
                   <div className="col-span-2">
@@ -179,7 +178,7 @@ export default function CartPage() {
                       label="Rua"
                       rules={[{ required: true, message: "Informe a rua" }]}
                     >
-                      <Input />
+                      <Input className="!rounded-xl" />
                     </Form.Item>
                   </div>
                   <Form.Item
@@ -187,11 +186,11 @@ export default function CartPage() {
                     label="Número"
                     rules={[{ required: true, message: "Nº" }]}
                   >
-                    <Input />
+                    <Input className="!rounded-xl" />
                   </Form.Item>
                 </div>
                 <Form.Item name="complement" label="Complemento (opcional)">
-                  <Input />
+                  <Input className="!rounded-xl" />
                 </Form.Item>
                 <div className="grid grid-cols-2 gap-2">
                   <Form.Item
@@ -199,29 +198,30 @@ export default function CartPage() {
                     label="Bairro"
                     rules={[{ required: true, message: "Informe o bairro" }]}
                   >
-                    <Input />
+                    <Input className="!rounded-xl" />
                   </Form.Item>
                   <Form.Item
                     name="city"
                     label="Cidade"
                     rules={[{ required: true, message: "Informe a cidade" }]}
                   >
-                    <Input />
+                    <Input className="!rounded-xl" />
                   </Form.Item>
                 </div>
                 <Form.Item name="zipCode" label="CEP (opcional)">
-                  <Input placeholder="00000-000" />
+                  <Input className="!rounded-xl" placeholder="00000-000" />
                 </Form.Item>
                 <Form.Item name="notes" label="Observações (opcional)">
-                  <Input.TextArea rows={2} />
+                  <Input.TextArea className="!rounded-xl" rows={2} />
                 </Form.Item>
 
                 <Button
                   type="primary"
                   htmlType="submit"
+                  size="large"
                   block
                   loading={createOrder.isPending}
-                  className="!bg-[#2D5A27]"
+                  className="!bg-[#2D5A27] hover:!bg-[#234a1f] !rounded-xl mt-4 transition-colors"
                 >
                   {session?.user
                     ? "Finalizar pedido via WhatsApp"
