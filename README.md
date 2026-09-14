@@ -1,5 +1,5 @@
 **E-commerce desenvolvido com Next.js, React, TypeScript e Tailwind CSS**
-**Demo**: https://e-commerce-plants-theta.vercel.app/
+**Demo**: [https://e-commerce-plants-theta.vercel.app/](https://meu-jardimgw-two.vercel.app/)
 
 Home
 <img width="1918" height="908" alt="image" src="https://github.com/user-attachments/assets/3e49a890-6294-4bbd-a2c7-00001437b62a" />
