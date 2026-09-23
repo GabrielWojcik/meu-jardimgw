@@ -88,9 +88,9 @@ export default function AdminCategoriesPage() {
     <div>
       {messageContextHolder}
       {modalContextHolder}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Categorias</h1>
-        <Button type="primary" onClick={() => setIsFormOpen(true)}>
+        <Button type="primary" block className="sm:w-auto" onClick={() => setIsFormOpen(true)}>
           Nova categoria
         </Button>
       </div>
@@ -105,6 +105,7 @@ export default function AdminCategoriesPage() {
         dataSource={categories}
         loading={isLoading}
         pagination={false}
+        scroll={{ x: 560 }}
       />
 
       <Modal

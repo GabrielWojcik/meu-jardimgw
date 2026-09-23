@@ -123,16 +123,14 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
               >
                 {images.map((url, index) => (
                   <div key={url + index}>
-                    <div className="relative w-full pt-[100%]">
-                      <div className="absolute inset-0 p-6">
-                        <Image
-                          src={url}
-                          alt={`${product.title} - imagem ${index + 1}`}
-                          fill
-                          className="object-contain"
-                          priority={index === 0}
-                        />
-                      </div>
+                    <div className="relative w-full aspect-square">
+                      <Image
+                        src={url}
+                        alt={`${product.title} - imagem ${index + 1}`}
+                        fill
+                        className="object-cover"
+                        priority={index === 0}
+                      />
                     </div>
                   </div>
                 ))}
@@ -182,13 +180,13 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
           )}
 
           {images.length > 1 && (
-            <div className="grid grid-cols-4 gap-3 mt-3">
+            <div className="flex flex-wrap justify-center gap-3 mt-3">
               {images.map((url, index) => (
                 <button
                   key={url + index}
                   type="button"
                   onClick={() => goToImage(index)}
-                  className={`relative aspect-square rounded-xl overflow-hidden border-2 bg-slate-50 ${
+                  className={`relative w-[calc(25%-0.5625rem)] aspect-square rounded-xl overflow-hidden border-2 bg-slate-50 ${
                     index === activeImage
                       ? "border-emerald-700"
                       : "border-transparent"

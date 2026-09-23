@@ -5,11 +5,14 @@ import Image from "next/image";
 import { Button, Form, Input, message } from "antd";
 import { useCartStore } from "@/store/cartStore";
 import { useSession, signIn } from "next-auth/react";
+import { useEffect } from "react";
 import { useCreateOrder } from "@/hooks/useOrders";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 import type { CreateOrderInput } from "@/types/order";
 
 type DeliveryFormValues = Omit<CreateOrderInput, "items">;
+
+const CHECKOUT_DRAFT_KEY = "carrinho:checkout-draft";
 
 function buildWhatsAppMessage(
   items: { name: string; price: number; quantity: number }[],
@@ -50,8 +53,26 @@ export default function CartPage() {
   const createOrder = useCreateOrder();
   const [form] = Form.useForm<DeliveryFormValues>();
 
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(CHECKOUT_DRAFT_KEY);
+      if (raw) {
+        form.setFieldsValue(JSON.parse(raw));
+        sessionStorage.removeItem(CHECKOUT_DRAFT_KEY);
+      }
+    } catch {
+      // sessionStorage indisponível (modo privado, etc.) — sem draft para restaurar
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleFinish = async (values: DeliveryFormValues) => {
     if (!session?.user) {
+      try {
+        sessionStorage.setItem(CHECKOUT_DRAFT_KEY, JSON.stringify(values));
+      } catch {
+        // ignora falha ao persistir o rascunho
+      }
       signIn("google", { callbackUrl: "/carrinho" });
       return;
     }

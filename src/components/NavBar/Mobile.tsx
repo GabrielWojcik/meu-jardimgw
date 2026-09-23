@@ -65,6 +65,11 @@ export function NavBarMobile() {
               <Link href="/contato">
                 <li>Contato</li>
               </Link>
+              {session?.user?.isAdmin && (
+                <Link href="/admin/produtos">
+                  <li>Admin</li>
+                </Link>
+              )}
             </ul>
           </div>
         </div>
