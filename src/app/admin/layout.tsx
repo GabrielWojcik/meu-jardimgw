@@ -10,6 +10,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <Link href="/admin/produtos" className="text-gray-600 hover:text-[#2f5e3c]">
               Produtos
             </Link>
+            <Link href="/admin/categorias" className="text-gray-600 hover:text-[#2f5e3c]">
+              Categorias
+            </Link>
           </nav>
           <Link href="/" className="ml-auto text-sm text-gray-500 hover:text-gray-700">
             Voltar à loja

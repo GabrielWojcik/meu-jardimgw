@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Button, Modal, Table, Tag, message } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import Image from "next/image";
@@ -9,17 +11,28 @@ import { useDeleteProduct } from "@/hooks/useAdminProducts";
 import type { Product } from "@/types/product";
 
 export default function AdminProductsPage() {
+  const router = useRouter();
   const { data, isLoading, isError } = useProducts({
     includeInactive: true,
     limit: 60,
   });
   const deleteProduct = useDeleteProduct();
-  const [messageApi, contextHolder] = message.useMessage();
+  const [messageApi, messageContextHolder] = message.useMessage();
+  const [modal, modalContextHolder] = Modal.useModal();
+  const [isNavigating, startTransition] = useTransition();
+  const [navigatingSlug, setNavigatingSlug] = useState<string | null>(null);
 
   const products = data?.data ?? [];
 
+  const handleEdit = (product: Product) => {
+    setNavigatingSlug(product.slug);
+    startTransition(() => {
+      router.push(`/admin/produtos/${product.slug}/editar`);
+    });
+  };
+
   const handleDelete = (product: Product) => {
-    Modal.confirm({
+    modal.confirm({
       title: `Excluir "${product.title}"?`,
       content: "Essa ação não pode ser desfeita.",
       okText: "Excluir",
@@ -75,14 +88,22 @@ export default function AdminProductsPage() {
     {
       title: "Ações",
       render: (_, product) => (
-        <div className="flex gap-3">
-          <Link href={`/admin/produtos/${product.slug}/editar`}>Editar</Link>
-          <button
-            className="text-red-600 cursor-pointer"
+        <div className="flex gap-2">
+          <Button
+            size="small"
+            loading={isNavigating && navigatingSlug === product.slug}
+            onClick={() => handleEdit(product)}
+          >
+            Editar
+          </Button>
+          <Button
+            size="small"
+            danger
+            loading={deleteProduct.isPending && deleteProduct.variables === product.id}
             onClick={() => handleDelete(product)}
           >
             Excluir
-          </button>
+          </Button>
         </div>
       ),
     },
@@ -90,7 +111,8 @@ export default function AdminProductsPage() {
 
   return (
     <div>
-      {contextHolder}
+      {messageContextHolder}
+      {modalContextHolder}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Produtos</h1>
         <Link href="/admin/produtos/novo">

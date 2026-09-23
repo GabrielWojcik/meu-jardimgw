@@ -9,6 +9,16 @@ export interface Category {
   productCount: number;
 }
 
+/** Payload do formulário de criar categoria (espelha o CreateCategoryDto da API) */
+export interface CategoryInput {
+  name: string;
+  slug?: string;
+  description?: string;
+  imageUrl?: string;
+  kind?: "PLANT" | "POT";
+  position?: number;
+}
+
 export interface ProductImage {
   id: string;
   url: string;

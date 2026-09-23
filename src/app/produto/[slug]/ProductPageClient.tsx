@@ -255,7 +255,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
               </span>
             </div>
 
-            <p className="text-sm text-slate-600 leading-relaxed">
+            <p className="text-sm text-slate-600 leading-relaxed break-words">
               {product.description}
             </p>
 
@@ -338,7 +338,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
               <h3 className="text-lg font-bold text-emerald-900">
                 Sobre este produto
               </h3>
-              <p className="text-sm text-slate-600 leading-relaxed">
+              <p className="text-sm text-slate-600 leading-relaxed break-words">
                 {product.description}
               </p>
             </div>
