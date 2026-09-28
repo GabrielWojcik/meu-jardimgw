@@ -1,61 +1,59 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Form, Input, InputNumber, Modal, Select, Table, Tag, message } from "antd";
+import { Button, Form, Input, InputNumber, Modal, Table, Tag, message } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { useCategories } from "@/hooks/useCategories";
 import { useKinds } from "@/hooks/useKinds";
-import { useCreateCategory, useDeleteCategory } from "@/hooks/useAdminCategories";
+import { useCreateKind, useDeleteKind } from "@/hooks/useAdminKinds";
 import { AdminButton } from "@/components/admin/AdminButton";
 import { ApiError } from "@/lib/api";
-import type { Category, CategoryInput } from "@/types/product";
+import type { Kind, KindInput } from "@/types/product";
 
-export default function AdminCategoriesPage() {
-  const { data: categories, isLoading, isError } = useCategories();
-  const { data: kinds } = useKinds();
-  const createCategory = useCreateCategory();
-  const deleteCategory = useDeleteCategory();
+export default function AdminKindsPage() {
+  const { data: kinds, isLoading, isError } = useKinds();
+  const createKind = useCreateKind();
+  const deleteKind = useDeleteKind();
   const [messageApi, messageContextHolder] = message.useMessage();
   const [modal, modalContextHolder] = Modal.useModal();
-  const [form] = Form.useForm<CategoryInput>();
+  const [form] = Form.useForm<KindInput>();
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const handleCreate = async (values: CategoryInput) => {
+  const handleCreate = async (values: KindInput) => {
     try {
-      await createCategory.mutateAsync(values);
-      messageApi.success("Categoria criada.");
+      await createKind.mutateAsync(values);
+      messageApi.success("Tipo criado.");
       form.resetFields();
       setIsFormOpen(false);
     } catch {
-      messageApi.error("Não foi possível criar a categoria. Confira os campos.");
+      messageApi.error("Não foi possível criar o tipo. Confira os campos.");
     }
   };
 
-  const handleDelete = (category: Category) => {
+  const handleDelete = (kind: Kind) => {
     modal.confirm({
-      title: `Excluir "${category.name}"?`,
+      title: `Excluir "${kind.name}"?`,
       content: "Essa ação não pode ser desfeita.",
       okText: "Excluir",
       okType: "danger",
       cancelText: "Cancelar",
       onOk: async () => {
         try {
-          await deleteCategory.mutateAsync(category.id);
-          messageApi.success("Categoria excluída.");
+          await deleteKind.mutateAsync(kind.id);
+          messageApi.success("Tipo excluído.");
         } catch (error) {
           const apiMessage =
             error instanceof ApiError && typeof error.info === "object" && error.info
               ? (error.info as { message?: string }).message
               : null;
-          messageApi.error(apiMessage ?? "Não foi possível excluir a categoria.");
+          messageApi.error(apiMessage ?? "Não foi possível excluir o tipo.");
         }
       },
     });
   };
 
-  const columns: ColumnsType<Category> = [
+  const columns: ColumnsType<Kind> = [
     {
-      title: "Categoria",
+      title: "Tipo",
       dataIndex: "name",
     },
     {
@@ -63,24 +61,23 @@ export default function AdminCategoriesPage() {
       dataIndex: "slug",
     },
     {
-      title: "Tipo",
-      dataIndex: "kind",
-      render: (kind: string) =>
-        kinds?.find((k) => k.slug === kind)?.name ?? kind,
-    },
-    {
       title: "Produtos",
       dataIndex: "productCount",
       render: (count: number) => <Tag>{count}</Tag>,
     },
     {
+      title: "Categorias",
+      dataIndex: "categoryCount",
+      render: (count: number) => <Tag>{count}</Tag>,
+    },
+    {
       title: "Ações",
-      render: (_, category) => (
+      render: (_, kind) => (
         <Button
           size="small"
           danger
-          loading={deleteCategory.isPending && deleteCategory.variables === category.id}
-          onClick={() => handleDelete(category)}
+          loading={deleteKind.isPending && deleteKind.variables === kind.id}
+          onClick={() => handleDelete(kind)}
         >
           Excluir
         </Button>
@@ -93,32 +90,32 @@ export default function AdminCategoriesPage() {
       {messageContextHolder}
       {modalContextHolder}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Categorias</h1>
+        <h1 className="text-2xl font-bold text-gray-800">Tipos</h1>
         <AdminButton className="self-start sm:self-auto" onClick={() => setIsFormOpen(true)}>
-          Nova categoria
+          Novo tipo
         </AdminButton>
       </div>
 
       {isError && (
-        <p className="text-red-600">Não foi possível carregar as categorias.</p>
+        <p className="text-red-600">Não foi possível carregar os tipos.</p>
       )}
 
       <Table
         rowKey="id"
         columns={columns}
-        dataSource={categories}
+        dataSource={kinds}
         loading={isLoading}
         pagination={false}
         scroll={{ x: 560 }}
       />
 
       <Modal
-        title="Nova categoria"
+        title="Novo tipo"
         open={isFormOpen}
         onCancel={() => setIsFormOpen(false)}
         okText="Criar"
         cancelText="Cancelar"
-        confirmLoading={createCategory.isPending}
+        confirmLoading={createKind.isPending}
         okButtonProps={{
           size: "small",
           className: "!bg-[#2f5e3c] hover:!bg-[#254a30] !rounded-full !px-5 !py-4",
@@ -126,12 +123,7 @@ export default function AdminCategoriesPage() {
         onOk={() => form.submit()}
         destroyOnClose
       >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleCreate}
-          initialValues={{ kind: "PLANT" }}
-        >
+        <Form form={form} layout="vertical" onFinish={handleCreate}>
           <Form.Item
             name="name"
             label="Nome"
@@ -145,24 +137,7 @@ export default function AdminCategoriesPage() {
             label="Slug (opcional, gerado do nome se vazio)"
             rules={[{ min: 2, max: 80, message: "Slug precisa ter 2-80 caracteres" }]}
           >
-            <Input placeholder="suculentas" />
-          </Form.Item>
-
-          <Form.Item name="kind" label="Tipo">
-            <Select
-              options={kinds?.map((kind) => ({
-                value: kind.slug,
-                label: kind.name,
-              }))}
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="description"
-            label="Descrição (opcional)"
-            rules={[{ max: 500, message: "Descrição pode ter no máximo 500 caracteres" }]}
-          >
-            <Input.TextArea rows={3} />
+            <Input placeholder="aromatica" />
           </Form.Item>
 
           <Form.Item name="position" label="Posição (opcional)">

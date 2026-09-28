@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Button,
   Form,
   Input,
   InputNumber,
@@ -15,13 +14,16 @@ import {
 import type { UploadFile } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useCategories } from "@/hooks/useCategories";
+import { useKinds } from "@/hooks/useKinds";
 import { useCreateProduct, useUploadProductImages } from "@/hooks/useAdminProducts";
+import { AdminButton } from "@/components/admin/AdminButton";
 import type { ProductInput } from "@/types/product";
 
 export default function NewProductPage() {
   const router = useRouter();
-  const [kind, setKind] = useState<"PLANT" | "POT">("PLANT");
+  const [kind, setKind] = useState("PLANT");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const { data: kinds } = useKinds();
   const { data: categories } = useCategories({ kind });
   const createProduct = useCreateProduct();
   const uploadImages = useUploadProductImages();
@@ -95,10 +97,7 @@ export default function NewProductPage() {
         <div className="grid grid-cols-2 gap-4">
           <Form.Item name="kind" label="Tipo">
             <Select
-              options={[
-                { value: "PLANT", label: "Planta" },
-                { value: "POT", label: "Vaso" },
-              ]}
+              options={kinds?.map((k) => ({ value: k.slug, label: k.name }))}
               onChange={(value) => setKind(value)}
             />
           </Form.Item>
@@ -158,13 +157,12 @@ export default function NewProductPage() {
           </Upload>
         </Form.Item>
 
-        <Button
-          type="primary"
+        <AdminButton
           htmlType="submit"
           loading={createProduct.isPending || uploadImages.isPending}
         >
           Criar produto
-        </Button>
+        </AdminButton>
       </Form>
     </div>
   );

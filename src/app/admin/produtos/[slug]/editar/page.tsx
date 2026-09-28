@@ -16,7 +16,9 @@ import {
 import type { UploadFile } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useCategories } from "@/hooks/useCategories";
+import { useKinds } from "@/hooks/useKinds";
 import { useProduct } from "@/hooks/useProducts";
+import { AdminButton } from "@/components/admin/AdminButton";
 import {
   useDeleteProductImage,
   useUpdateProduct,
@@ -30,9 +32,10 @@ export default function EditProductPage() {
   const { data: product, isLoading, isError } = useProduct(slug);
 
   const [form] = Form.useForm<ProductInput>();
-  const [kind, setKind] = useState<"PLANT" | "POT">("PLANT");
+  const [kind, setKind] = useState("PLANT");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
+  const { data: kinds } = useKinds();
   const { data: categories } = useCategories({ kind });
   const updateProduct = useUpdateProduct(product?.id ?? "");
   const uploadImages = useUploadProductImages();
@@ -41,14 +44,14 @@ export default function EditProductPage() {
   useEffect(() => {
     if (!product) return;
 
-    setKind(product.kind as "PLANT" | "POT");
+    setKind(product.kind);
     form.setFieldsValue({
       title: product.title,
       slug: product.slug,
       description: product.description,
       price: product.price,
       compareAtPrice: product.compareAtPrice ?? undefined,
-      kind: product.kind as "PLANT" | "POT",
+      kind: product.kind,
       category: product.category.name,
       light: product.light ?? undefined,
       water: product.water ?? undefined,
@@ -145,10 +148,7 @@ export default function EditProductPage() {
         <div className="grid grid-cols-2 gap-4">
           <Form.Item name="kind" label="Tipo">
             <Select
-              options={[
-                { value: "PLANT", label: "Planta" },
-                { value: "POT", label: "Vaso" },
-              ]}
+              options={kinds?.map((k) => ({ value: k.slug, label: k.name }))}
               onChange={(value) => setKind(value)}
             />
           </Form.Item>
@@ -231,13 +231,12 @@ export default function EditProductPage() {
         </Form.Item>
 
         <div className="flex gap-3">
-          <Button
-            type="primary"
+          <AdminButton
             htmlType="submit"
             loading={updateProduct.isPending || uploadImages.isPending}
           >
             Salvar alterações
-          </Button>
+          </AdminButton>
           <Button onClick={() => router.push("/admin/produtos")}>Voltar</Button>
         </div>
       </Form>

@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useProducts } from "@/hooks/useProducts";
 import { useDeleteProduct } from "@/hooks/useAdminProducts";
+import { AdminButton } from "@/components/admin/AdminButton";
 import type { Product } from "@/types/product";
 
 export default function AdminProductsPage() {
@@ -115,10 +116,8 @@ export default function AdminProductsPage() {
       {modalContextHolder}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Produtos</h1>
-        <Link href="/admin/produtos/novo">
-          <Button type="primary" block className="sm:w-auto">
-            Novo produto
-          </Button>
+        <Link href="/admin/produtos/novo" className="self-start sm:self-auto">
+          <AdminButton>Novo produto</AdminButton>
         </Link>
       </div>
 

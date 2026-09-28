@@ -15,7 +15,24 @@ export interface CategoryInput {
   slug?: string;
   description?: string;
   imageUrl?: string;
-  kind?: "PLANT" | "POT";
+  /** id ou slug do tipo (ex: "PLANT") */
+  kind?: string;
+  position?: number;
+}
+
+export interface Kind {
+  id: string;
+  name: string;
+  slug: string;
+  position: number;
+  productCount: number;
+  categoryCount: number;
+}
+
+/** Payload do formulário de criar tipo (espelha o CreateKindDto da API) */
+export interface KindInput {
+  name: string;
+  slug?: string;
   position?: number;
 }
 
@@ -68,7 +85,8 @@ export interface ProductsQuery {
   page?: number;
   limit?: number;
   category?: string;
-  kind?: "PLANT" | "POT";
+  /** id ou slug do tipo (ex: "PLANT") */
+  kind?: string;
   search?: string;
   minPrice?: number;
   maxPrice?: number;
@@ -86,7 +104,8 @@ export interface ProductInput {
   price: number;
   compareAtPrice?: number;
   category: string;
-  kind?: "PLANT" | "POT";
+  /** id ou slug do tipo (ex: "PLANT") */
+  kind?: string;
   light?: string;
   water?: string;
   size?: string;

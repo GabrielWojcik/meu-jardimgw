@@ -3,7 +3,8 @@ import { api } from "@/lib/api";
 import type { Category } from "@/types/product";
 
 export interface CategoriesQuery {
-  kind?: "PLANT" | "POT";
+  /** id ou slug do tipo (ex: "PLANT") */
+  kind?: string;
 }
 
 export function useCategories(query: CategoriesQuery = {}) {
