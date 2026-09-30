@@ -4,15 +4,16 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useFilterStore } from "@/store/filterStore";
 import { ProductCard } from "@/components/ProductCard";
 import { useProducts } from "@/hooks/useProducts";
-
-const categories = ["Suculentas", "Orquídeas", "Samambaias"];
+import { useCategories } from "@/hooks/useCategories";
 
 // Componente que usa useSearchParams
 function CatalogoContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { category, setCategory } = useFilterStore();
+  const { data: categories } = useCategories({ kind: "PLANT" });
   const { data, isLoading, isError } = useProducts({
+    kind: "PLANT",
     category: category ?? undefined,
   });
   const products = data?.data ?? [];
@@ -58,17 +59,17 @@ function CatalogoContent() {
           >
             Todos
           </button>
-          {categories.map((cat) => (
+          {categories?.map((cat) => (
             <button
-              key={cat}
-              onClick={() => handleCategoryChange(cat)}
+              key={cat.id}
+              onClick={() => handleCategoryChange(cat.name)}
               className={`px-4 py-2 cursor-pointer rounded-full text-sm font-medium transition-colors ${
-                category === cat
+                category === cat.name
                   ? "bg-green-600 text-white"
                   : "bg-white text-gray-600 hover:bg-gray-100"
               }`}
             >
-              {cat}
+              {cat.name}
             </button>
           ))}
         </div>
